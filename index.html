@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스웨덴어 단어 카드</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app {
+      background: #ffffff;
+      padding: 24px 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      padding: 24px 16px;
+      margin-bottom: 16px;
+      background: #fafafa;
+    }
+
+    .label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .swedish {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .korean {
+      font-size: 18px;
+      color: #333;
+      min-height: 26px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 0;
+      border-radius: 999px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .show-btn {
+      background: #2f80ed;
+      color: #ffffff;
+    }
+
+    .next-btn {
+      background: #e0e0e0;
+      color: #333333;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .counter {
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+    }
+
+.word-image {
+  margin-top: 12px;
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: none; /* 처음엔 안 보이게 */
+}
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>스웨덴어 단어 카드</h1>
+    <p class="subtitle">버튼을 눌러 뜻을 확인해 보세요</p>
+
+    <div class="card">
+      <div class="label">스웨덴어</div>
+      <div id="swedish-word" class="swedish">...</div>
+
+      <div class="label">뜻</div>
+<div id="korean-meaning" class="korean">
+  뜻을 보려면 버튼을 누르세요
+</div>
+<img id="word-image" class="word-image" alt="" />
+</div>
+
+    <div class="buttons">
+      <button class="show-btn" id="show-btn">뜻 보기</button>
+      <button class="next-btn" id="next-btn">다음 단어</button>
+    </div>
+
+    <div class="counter" id="counter"></div>
+  </div>
+
+  <script>
+    // 여기에 네가 외울 스웨덴어 단어들을 넣으면 돼
+    const words = [
+  { swedish: "hej", korean: "안녕" },
+  { swedish: "kärlek", korean: "사랑" },
+  {
+    swedish: "hegomi",
+    korean: "헤고미",
+    image: "hegomi.jpg"
+  },
+  {
+    swedish: "baekman",
+    korean: "백고만고미",
+    image: "baekman.jpg"
+  }
+];
+
+
+    let currentIndex = 0;
+    let isShown = false;
+
+    const swedishEl = document.getElementById("swedish-word");
+    const koreanEl = document.getElementById("korean-meaning");
+    const showBtn = document.getElementById("show-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const counterEl = document.getElementById("counter");
+const imageEl = document.getElementById("word-image");
+
+
+    function showCard(index) {
+  const item = words[index];
+  swedishEl.textContent = item.swedish;
+  koreanEl.textContent = "뜻을 보려면 버튼을 누르세요";
+  isShown = false;
+
+  // 이미지 초기화
+  imageEl.style.display = "none";
+  imageEl.src = "";
+
+  updateCounter();
+}
+
+
+    function updateCounter() {
+      counterEl.textContent = `${currentIndex + 1} / ${words.length}`;
+    }
+
+    showBtn.addEventListener("click", () => {
+  const current = words[currentIndex];
+
+  if (!isShown) {
+    // 뜻 보여주기
+    koreanEl.textContent = current.korean;
+
+    // 이미지가 있는 경우에만 보여주기
+    if (current.image) {
+      imageEl.src = current.image;
+      imageEl.style.display = "block";
+    } else {
+      imageEl.style.display = "none";
+      imageEl.src = "";
+    }
+
+    isShown = true;
+  } else {
+    // 다시 숨기기
+    koreanEl.textContent = "뜻을 보려면 버튼을 누르세요";
+    imageEl.style.display = "none";
+    imageEl.src = "";
+    isShown = false;
+  }
+});
+
+
+    nextBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % words.length;
+      showCard(currentIndex);
+    });
+
+    // 처음 카드 보여주기
+    showCard(currentIndex);
+  </script>
+</body>
+</html>
